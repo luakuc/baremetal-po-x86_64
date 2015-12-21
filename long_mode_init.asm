@@ -19,7 +19,7 @@ section .text
 bits 64
 long_mode_start:
     ; call rust main (with multiboot pointer in rdi)
-    call rust_main
+    ;call rust_main
 .os_returned:
     ; rust main returned, print `OS returned!`
     mov rax, 0x4f724f204f534f4f
