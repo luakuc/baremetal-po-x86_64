@@ -19,6 +19,56 @@ section .text
 bits 32
 start:
     mov esp, stack_top
+
+    ; Save registers
+    push edx
+    push ecx
+    push ebx
+    push eax
+
+    ; Enable interrupts
+    ;sti
+
+    ; Initialize edx to vga buffer ah attribute, al ch
+    mov edx, 0xb8000
+    mov ax, 0x0f60
+
+    ; ebx number of loops
+    mov ebx,10000
+.loop:
+    ; Output next character and attribte
+    mov word [edx], ax
+
+    ; Incrment to next character with wrap
+    inc al
+    cmp al, 0x7f
+    jne .nextloc
+    mov al,60
+
+    ; Next location with wrap
+.nextloc:
+    add edx, 2
+    and edx,0x7ff
+    or  edx,0xb8000
+
+    ; Delay
+    mov ecx,0x2000
+.delay:
+    loop .delay
+
+    ; Continue looping until ebx is 0
+    dec ebx
+    jnz .loop
+
+    ; Disable interrupts
+    cli
+
+    ; Restore registers
+    pop  eax
+    pop  ebx
+    pop  ecx
+    pop  edx
+
     ; Move Multiboot info pointer to edi to pass it to the kernel. We must not
     ; modify the `edi` register until the kernel it called.
     mov edi, ebx
