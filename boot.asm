@@ -27,7 +27,7 @@ start:
     push eax
 
     ; Enable interrupts
-    ;sti
+    sti
 
     ; Initialize edx to vga buffer ah attribute, al ch
     mov edx, 0xb8000
