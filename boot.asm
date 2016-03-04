@@ -26,6 +26,17 @@ start:
     push ebx
     push eax
 
+    ; Disable PIC interrupts so we don't get interrupts if the PIC
+    ; was being used by grub or BIOS. See Disabling section of
+    ; http://wiki.osdev.org/PIC. If the application wants to use devices
+    ; connected to the PIC, such at the PIT, it will probably want
+    ; to remap the PIC interrupts to be above 0 .. 31 which are
+    ; used or reserved by Intel. See the Initialisation section of
+    ; the same page for the PIC_remap subroutine.
+    mov al,0xff
+    out 0xa1, al
+    out 0x21, al
+
     ; Enable interrupts
     sti
 
